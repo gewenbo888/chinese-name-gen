@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chinese Name Generator — 中文取名器</title>
+<meta name="description" content="Generate beautiful, meaningful Chinese names with cultural analysis. Choose style, gender, and surname. Free bilingual tool. 中文取名器——生成优美有意义的中文名字。">
+<meta property="og:title" content="Chinese Name Generator — 中文取名器">
+<meta property="og:description" content="Generate meaningful Chinese names with cultural analysis and five-element harmony.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%23f5efe6'/><text x='32' y='44' text-anchor='middle' font-family='serif' font-size='30' fill='%23c44030'>名</text></svg>">
+<script defer src="https://analytics-dashboard-two-blue.vercel.app/tracker.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Manrope:wght@300;400;500;600&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5efe6;--bg2:#ede5d8;--bg3:#e4dace;
+  --ink:#2a2018;--ink2:#4a3828;--dim:#8a7868;--faint:#d4c8b8;
+  --red:#c44030;--red-bg:rgba(196,64,48,.06);
+  --gold:#b08820;--gold-bg:rgba(176,136,32,.06);
+  --jade:#2a7a5a;--jade-bg:rgba(42,122,90,.06);
+  --rule:rgba(42,32,24,.06);
+  --shadow:0 1px 3px rgba(42,32,24,.04),0 6px 20px rgba(42,32,24,.06);
+  --shadow-lg:0 4px 12px rgba(42,32,24,.06),0 16px 44px rgba(42,32,24,.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Manrope',sans-serif;font-weight:400;line-height:1.7;
+  -webkit-font-smoothing:antialiased;min-height:100vh;
+}
+.cn{font-family:'Noto Serif SC',serif;}
+.en{font-family:'Cormorant Garamond',serif;}
+.mono{font-family:'IBM Plex Mono',monospace;}
+
+/* ═══ LAYOUT ═══ */
+.page{max-width:720px;margin:0 auto;padding:40px 24px 60px;}
+
+/* ═══ HEADER ═══ */
+header{text-align:center;padding:40px 0 32px;border-bottom:1px solid var(--rule);margin-bottom:32px;}
+.header-char{
+  font-family:'Noto Serif SC',serif;font-weight:900;
+  font-size:clamp(3rem,8vw,5rem);line-height:1;color:var(--red);opacity:.15;
+}
+h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.6rem,3.5vw,2.4rem);letter-spacing:-.02em;margin-top:-8px;}
+.sub-cn{font-family:'Noto Serif SC',serif;font-weight:200;font-size:clamp(.9rem,1.8vw,1.1rem);color:var(--dim);margin-top:4px;}
+.sub-desc{font-size:.85rem;color:var(--dim);margin-top:12px;max-width:440px;margin-left:auto;margin-right:auto;}
+
+/* ═══ FORM ═══ */
+.gen-form{
+  background:#fff;border:1px solid var(--rule);border-radius:18px;
+  padding:28px 24px;box-shadow:var(--shadow);margin-bottom:28px;
+}
+.form-row{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+.form-group{flex:1;min-width:140px;}
+.form-group label{
+  display:block;font-size:.7rem;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:6px;
+}
+.form-group input,.form-group select{
+  width:100%;padding:10px 14px;border:1px solid var(--faint);border-radius:10px;
+  font-family:'Noto Serif SC',serif;font-size:1rem;background:var(--bg);
+  color:var(--ink);outline:none;transition:border-color .2s;
+}
+.form-group input:focus,.form-group select:focus{border-color:var(--red);}
+.form-group input::placeholder{color:var(--dim);font-family:'Manrope',sans-serif;font-size:.82rem;}
+
+.style-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.style-chip{
+  font-size:.7rem;font-weight:500;padding:6px 14px;border-radius:100px;
+  border:1px solid var(--faint);background:transparent;color:var(--dim);
+  cursor:pointer;transition:all .15s;
+}
+.style-chip:hover{border-color:var(--red);color:var(--red);}
+.style-chip.active{background:var(--red-bg);border-color:rgba(196,64,48,.3);color:var(--red);}
+
+.gen-btn{
+  width:100%;padding:12px;border:none;border-radius:12px;
+  font-family:'Noto Serif SC',serif;font-size:1rem;font-weight:600;
+  background:var(--ink);color:#fff;cursor:pointer;transition:background .2s;
+  letter-spacing:.1em;
+}
+.gen-btn:hover{background:#3a3028;}
+.gen-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+/* ═══ RESULTS ═══ */
+.results{display:flex;flex-direction:column;gap:16px;}
+.name-card{
+  background:#fff;border:1px solid var(--rule);border-radius:16px;
+  padding:0;box-shadow:var(--shadow);overflow:hidden;
+  transition:box-shadow .2s;
+}
+.name-card:hover{box-shadow:var(--shadow-lg);}
+.name-top{display:flex;align-items:stretch;}
+.name-char{
+  width:100px;display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif SC',serif;font-weight:700;font-size:2.2rem;
+  background:var(--bg2);border-right:1px solid var(--rule);
+  flex-shrink:0;color:var(--ink);padding:20px 0;
+}
+.name-info{padding:16px 20px;flex:1;}
+.name-pinyin{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--dim);margin-bottom:2px;}
+.name-english{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;margin-bottom:8px;}
+.name-meaning{font-size:.85rem;color:var(--ink2);line-height:1.7;}
+.name-meaning-cn{font-family:'Noto Serif SC',serif;font-size:.82rem;color:var(--dim);margin-top:4px;line-height:1.8;}
+
+.name-details{padding:0 20px 16px;display:flex;flex-wrap:wrap;gap:8px;}
+.name-tag{
+  font-size:.6rem;font-weight:500;padding:3px 10px;border-radius:6px;
+  letter-spacing:.04em;
+}
+.tag-wuxing{background:var(--jade-bg);color:var(--jade);}
+.tag-style{background:var(--gold-bg);color:var(--gold);}
+.tag-score{background:var(--red-bg);color:var(--red);}
+
+.name-poem{
+  padding:12px 20px;background:var(--bg);border-top:1px solid var(--rule);
+  font-family:'Noto Serif SC',serif;font-style:italic;font-size:.82rem;
+  color:var(--dim);
+}
+
+/* ═══ LOADING ═══ */
+.loading{text-align:center;padding:40px;color:var(--dim);}
+.dot-pulse{display:inline-flex;gap:4px;}
+.dot-pulse span{width:6px;height:6px;border-radius:50%;background:var(--red);opacity:.3;animation:dpulse 1.2s ease infinite;}
+.dot-pulse span:nth-child(2){animation-delay:.2s;}
+.dot-pulse span:nth-child(3){animation-delay:.4s;}
+@keyframes dpulse{0%,100%{opacity:.3;transform:scale(1);}50%{opacity:1;transform:scale(1.3);}}
+
+/* ═══ EMPTY ═══ */
+.empty{text-align:center;padding:50px 20px;color:var(--dim);}
+.empty .icon{font-size:2.5rem;margin-bottom:12px;opacity:.2;}
+.empty p{font-size:.9rem;}
+
+footer{text-align:center;padding:32px 0;border-top:1px solid var(--rule);margin-top:40px;}
+footer p{font-size:.7rem;color:var(--dim);}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<header>
+  <div class="header-char">名</div>
+  <h1>Chinese Name Generator</h1>
+  <div class="sub-cn">中文取名器 — 生成优美有意义的中文名字</div>
+  <div class="sub-desc">Enter a surname, choose a style, and generate beautiful Chinese names with cultural analysis, five-element harmony, and poetic imagery.</div>
+</header>
+
+<div class="gen-form">
+  <div class="form-row">
+    <div class="form-group">
+      <label>Surname 姓氏</label>
+      <input type="text" id="surname" placeholder="例: 王, 李, 张" maxlength="2" value="王">
+    </div>
+    <div class="form-group">
+      <label>Gender 性别</label>
+      <select id="gender">
+        <option value="male">Male 男</option>
+        <option value="female">Female 女</option>
+        <option value="neutral">Neutral 中性</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Count 数量</label>
+      <select id="count">
+        <option value="5">5 names</option>
+        <option value="8" selected>8 names</option>
+        <option value="12">12 names</option>
+      </select>
+    </div>
+  </div>
+
+  <label style="font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);display:block;margin-bottom:8px;">Style 风格</label>
+  <div class="style-chips" id="styleChips">
+    <div class="style-chip active" data-style="classical">Classical 古典</div>
+    <div class="style-chip" data-style="nature">Nature 自然</div>
+    <div class="style-chip" data-style="virtue">Virtue 美德</div>
+    <div class="style-chip" data-style="modern">Modern 现代</div>
+    <div class="style-chip" data-style="poetic">Poetic 诗意</div>
+    <div class="style-chip" data-style="cosmic">Cosmic 宇宙</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn" onclick="generate()">生成名字 Generate Names</button>
+</div>
+
+<div id="results">
+  <div class="empty">
+    <div class="icon">&#128209;</div>
+    <p>Choose your options and click Generate<br><span class="cn" style="font-size:.82rem;">选择选项并点击生成</span></p>
+  </div>
+</div>
+
+<footer>
+  <p>Chinese Name Generator &mdash; 中文取名器 &middot; <a href="https://gewenbo-hub.vercel.app" style="color:var(--dim);">gewenbo.eth</a></p>
+  <p style="margin-top:6px;"><a href="https://github.com/gewenbo888/chinese-name-gen" target="_blank" style="color:var(--dim);font-size:.65rem;text-decoration:none;">View on GitHub &rarr;</a></p>
+</footer>
+
+</div>
+
+<script>
+// ═══ STYLE CHIP TOGGLE ═══
+let activeStyle='classical';
+document.querySelectorAll('.style-chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.style-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    activeStyle=chip.dataset.style;
+  });
+});
+
+// ═══ NAME DATABASE ═══
+// Each entry: [char, pinyin, meaning_en, meaning_cn, wuxing, score]
+const CHARS={
+classical:{
+male:[
+  ['瑜','yú','fine jade; virtue','美玉；品德','金',9],
+  ['墨','mò','ink; scholarly','墨；文雅','水',8],
+  ['辰','chén','celestial body; time','星辰；时辰','土',9],
+  ['煜','yù','brilliant; radiant','照耀；光辉','火',8],
+  ['铭','míng','inscribed; remembered','铭记；铭刻','金',8],
+  ['渊','yuān','deep pool; profound','深渊；渊博','水',7],
+  ['卿','qīng','minister; dear one','卿相；亲爱','木',8],
+  ['翰','hàn','writing brush; vast','翰墨；浩瀚','水',9],
+  ['彦','yàn','accomplished person','才俊；贤士','木',8],
+  ['赋','fù','endowed; literary composition','赋予；辞赋','水',7],
+  ['珩','héng','jade pendant','玉佩横梁','金',8],
+  ['琢','zhuó','to carve jade','雕琢；琢磨','金',7],
+],
+female:[
+  ['琬','wǎn','fine jade; graceful','美玉；温婉','金',9],
+  ['婉','wǎn','gentle; graceful','婉约；温婉','土',9],
+  ['瑶','yáo','precious jade','美玉；瑶池','金',9],
+  ['蕴','yùn','to contain; profound','蕴含；底蕴','木',8],
+  ['珺','jùn','beautiful jade','美玉','金',8],
+  ['韵','yùn','charm; rhyme','韵味；音韵','土',9],
+  ['沁','qìn','to permeate; refreshing','沁人心脾','水',8],
+  ['璇','xuán','beautiful jade; revolving','美玉；旋转','金',8],
+  ['颖','yǐng','intelligent; outstanding','聪颖；出众','木',8],
+  ['筠','yún','bamboo skin; refined','竹皮；高雅','木',7],
+  ['琳','lín','beautiful jade','美玉','金',8],
+  ['婧','jìng','slender and graceful','苗条；有才','木',8],
+]},
+nature:{
+male:[
+  ['岳','yuè','great mountain','高山；岳峰','土',9],
+  ['川','chuān','river; plain','河流；平原','水',8],
+  ['森','sēn','forest; dense','森林；茂密','木',8],
+  ['泽','zé','marsh; grace','湖泽；恩泽','水',9],
+  ['峻','jùn','high mountain; stern','峻峭；严峻','土',8],
+  ['澜','lán','great waves','波澜；壮阔','水',9],
+  ['霖','lín','continuous rain','久雨；甘霖','水',8],
+  ['松','sōng','pine tree; resilient','松树；坚韧','木',7],
+  ['屹','yì','standing tall','屹立；巍然','土',8],
+  ['溪','xī','mountain stream','小溪；清澈','水',8],
+  ['岚','lán','mountain mist','山间雾气','土',8],
+  ['崖','yá','cliff; precipice','悬崖；峭壁','土',7],
+],
+female:[
+  ['汐','xī','evening tide','潮汐；晚潮','水',9],
+  ['芷','zhǐ','fragrant herb','香草；芳芷','木',9],
+  ['萱','xuān','day lily; carefree','萱草；忘忧','木',8],
+  ['涵','hán','to contain; cultivated','涵养；包含','水',9],
+  ['菡','hàn','lotus bud','荷花；含苞','木',8],
+  ['漪','yī','ripples on water','水波纹','水',9],
+  ['蕊','ruǐ','flower pistil; core','花蕊；花心','木',8],
+  ['棠','táng','crabapple tree','海棠；棠花','木',8],
+  ['澈','chè','clear; limpid','清澈；透彻','水',8],
+  ['苓','líng','herb; spirit plant','茯苓；灵草','木',7],
+  ['荷','hé','lotus flower','荷花；莲','木',8],
+  ['兰','lán','orchid; elegant','兰花；高雅','木',9],
+]},
+virtue:{
+male:[
+  ['谦','qiān','humble; modest','谦逊；谦虚','木',9],
+  ['毅','yì','resolute; determined','刚毅；坚毅','木',9],
+  ['诚','chéng','sincere; honest','真诚；诚实','金',9],
+  ['礼','lǐ','propriety; courtesy','礼仪；礼节','火',8],
+  ['仁','rén','benevolence; kindness','仁爱；仁慈','金',9],
+  ['德','dé','virtue; morality','美德；品德','火',9],
+  ['信','xìn','trust; faithful','信任；忠信','金',8],
+  ['恒','héng','perseverance; eternal','恒心；永恒','水',8],
+  ['睿','ruì','wise; sagacious','睿智；聪慧','金',9],
+  ['哲','zhé','philosophy; wisdom','哲理；明智','火',8],
+  ['廉','lián','honest; clean','廉洁；清廉','木',7],
+  ['义','yì','righteousness; justice','正义；义气','木',8],
+],
+female:[
+  ['慧','huì','intelligent; wise','智慧；聪慧','水',9],
+  ['淑','shū','gentle; virtuous','淑女；贤淑','水',9],
+  ['雅','yǎ','elegant; refined','优雅；高雅','木',9],
+  ['贤','xián','virtuous; worthy','贤德；贤良','木',8],
+  ['静','jìng','quiet; serene','安静；宁静','金',9],
+  ['敏','mǐn','quick; clever','敏捷；聪敏','水',8],
+  ['善','shàn','good; kind','善良；慈善','金',8],
+  ['容','róng','to contain; appearance','容貌；包容','土',8],
+  ['端','duān','upright; proper','端正；端庄','火',8],
+  ['惠','huì','kind; gracious','恩惠；仁惠','水',8],
+  ['温','wēn','warm; gentle','温暖；温和','水',8],
+  ['柔','róu','soft; gentle','柔和；温柔','木',8],
+]},
+modern:{
+male:[
+  ['晨','chén','morning; dawn','清晨；早晨','金',8],
+  ['逸','yì','leisurely; outstanding','安逸；超逸','土',9],
+  ['熙','xī','prosperous; bright','光明；繁盛','水',8],
+  ['奕','yì','grand; abundant','奕奕；神采','木',8],
+  ['昊','hào','vast sky','天空；浩大','火',8],
+  ['旭','xù','rising sun','旭日；朝阳','木',8],
+  ['阳','yáng','sun; positive','阳光；积极','火',8],
+  ['杰','jié','outstanding; heroic','杰出；英杰','木',8],
+  ['然','rán','thus; natural','自然；坦然','金',8],
+  ['宸','chén','imperial; roof','帝王；宫殿','金',8],
+  ['轩','xuān','high; lofty','高大；气宇轩昂','土',8],
+  ['尧','yáo','legendary sage king','尧帝；圣明','木',8],
+],
+female:[
+  ['晗','hán','dawn; pre-sunrise','天欲明','火',8],
+  ['悦','yuè','joy; delight','喜悦；愉悦','金',9],
+  ['欣','xīn','joyful; flourishing','欣喜；欣然','木',8],
+  ['诺','nuò','promise; assent','承诺；诺言','火',8],
+  ['彤','tóng','red; vermillion','红色；彤云','火',8],
+  ['昕','xīn','dawn; new','黎明；崭新','火',8],
+  ['妍','yán','beautiful; gorgeous','美丽；妍丽','水',9],
+  ['瑾','jǐn','beautiful jade','美玉','火',8],
+  ['薇','wēi','fern; delicate','蔷薇；薇草','木',8],
+  ['芮','ruì','small; auspicious','小草；吉祥','木',7],
+  ['曦','xī','sunlight; dawn','晨光；曙光','火',9],
+  ['乐','lè','joy; music','快乐；音乐','火',8],
+]},
+poetic:{
+male:[
+  ['清','qīng','clear; pure','清澈；高洁','水',9],
+  ['远','yuǎn','far; distant','远方；深远','土',8],
+  ['逍','xiāo','carefree; wandering','逍遥；自在','金',8],
+  ['朗','lǎng','bright; clear','明朗；爽朗','火',8],
+  ['吟','yín','to chant; poetry','吟诵；吟咏','木',7],
+  ['枫','fēng','maple tree','枫树；红枫','木',8],
+  ['云','yún','cloud; lofty','云彩；高远','水',9],
+  ['鹤','hè','crane; longevity','仙鹤；长寿','水',8],
+  ['风','fēng','wind; style','风；风度','水',8],
+  ['影','yǐng','shadow; reflection','影子；光影','土',7],
+  ['弦','xián','string; music','琴弦；弓弦','水',8],
+  ['烟','yān','smoke; mist','烟雾；如烟','火',8],
+],
+female:[
+  ['月','yuè','moon','月亮；月光','金',9],
+  ['霜','shuāng','frost; pure white','霜；纯白','水',8],
+  ['烟','yān','smoke; ethereal mist','烟雾；如烟','火',8],
+  ['雪','xuě','snow; pure','雪；纯洁','水',9],
+  ['露','lù','dew; reveal','露珠；朝露','水',8],
+  ['影','yǐng','shadow; reflection','光影；倩影','土',8],
+  ['梦','mèng','dream','梦想；梦境','木',8],
+  ['云','yún','cloud','云；云霞','水',8],
+  ['霓','ní','rainbow; secondary rainbow','虹霓；彩虹','水',9],
+  ['黛','dài','dark pigment; eyebrow','黛色；粉黛','水',8],
+  ['烟','yān','smoke; mist','轻烟；如烟','火',7],
+  ['笙','shēng','reed pipe instrument','笙箫；笙歌','金',8],
+]},
+cosmic:{
+male:[
+  ['宇','yǔ','universe; space','宇宙；空间','土',9],
+  ['曜','yào','shine; celestial body','日月星辰','火',9],
+  ['星','xīng','star','星辰；星光','金',8],
+  ['辉','huī','radiance; glory','光辉；辉煌','水',8],
+  ['耀','yào','to shine; dazzling','耀眼；闪耀','火',9],
+  ['天','tiān','heaven; sky','天空；苍天','火',8],
+  ['霄','xiāo','sky; clouds','九霄；云霄','水',8],
+  ['焱','yàn','blazing fire','烈焰；火焰','火',8],
+  ['晖','huī','sunlight; radiance','阳光；光晖','水',7],
+  ['旻','mín','autumn sky','秋天的天空','火',8],
+  ['昱','yù','bright; sunlight','明亮；日光','火',8],
+  ['皓','hào','bright; luminous','皎洁；明亮','水',9],
+],
+female:[
+  ['星','xīng','star','星星；星辰','金',8],
+  ['辰','chén','celestial; time','星辰；时辰','土',8],
+  ['曦','xī','dawn light','晨光；曙光','火',9],
+  ['月','yuè','moon','月亮；月华','金',9],
+  ['璨','càn','brilliant; lustrous','璀璨；闪耀','金',9],
+  ['灵','líng','spirit; ethereal','灵气；灵动','火',8],
+  ['熠','yì','glittering','闪耀；光彩','火',8],
+  ['晞','xī','dawn; to dry','晨曦；日出','火',7],
+  ['昭','zhāo','bright; manifest','昭明；彰显','火',8],
+  ['辉','huī','radiance','光辉','水',7],
+  ['瑛','yīng','crystal; lustrous jade','晶莹；美玉','土',8],
+  ['烨','yè','bright; glorious','光耀；辉煌','火',8],
+]}
+};
+// Neutral uses a mix
+CHARS.classical.neutral=[...CHARS.classical.male.slice(0,6),...CHARS.classical.female.slice(0,6)];
+CHARS.nature.neutral=[...CHARS.nature.male.slice(0,6),...CHARS.nature.female.slice(0,6)];
+CHARS.virtue.neutral=[...CHARS.virtue.male.slice(0,6),...CHARS.virtue.female.slice(0,6)];
+CHARS.modern.neutral=[...CHARS.modern.male.slice(0,6),...CHARS.modern.female.slice(0,6)];
+CHARS.poetic.neutral=[...CHARS.poetic.male.slice(0,6),...CHARS.poetic.female.slice(0,6)];
+CHARS.cosmic.neutral=[...CHARS.cosmic.male.slice(0,6),...CHARS.cosmic.female.slice(0,6)];
+
+// Second chars for two-char given names
+const SECOND={
+male:[['之','zhī','of; possessive','之；语助词','火',7],['安','ān','peace','安定','土',8],['明','míng','bright','明亮','水',8],['文','wén','literature','文雅','水',8],['博','bó','broad','博学','水',8],['思','sī','to think','思考','金',8]],
+female:[['心','xīn','heart','心灵','金',8],['如','rú','like; as','如同','金',7],['若','ruò','like; if','若','木',8],['可','kě','possible','可以','木',7],['之','zhī','of','之','火',7],['兮','xī','poetic particle','语助词','金',8]]
+};
+SECOND.neutral=[...SECOND.male.slice(0,3),...SECOND.female.slice(0,3)];
+
+const POEMS={
+classical:['如玉之温润，如山之沉稳','典雅端庄，气韵生动','承古之智，铸今之才'],
+nature:['山高水长，天地之间','清风明月，山川入梦','溪声潺潺，松影摇曳'],
+virtue:['德行天下，仁者无敌','至诚至善，光风霁月','温良恭俭让，仁义礼智信'],
+modern:['朝气蓬勃，前程似锦','阳光正好，微风不燥','一路向前，不负韶华'],
+poetic:['明月松间照，清泉石上流','大漠孤烟直，长河落日圆','落花人独立，微雨燕双飞'],
+cosmic:['星辰大海，浩瀚无垠','璀璨银河，万物归一','日月经天，星辰拱北']
+};
+
+const WUXING_NAMES={金:'Metal 金',木:'Wood 木',水:'Water 水',火:'Fire 火',土:'Earth 土'};
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function generate(){
+  const surname=document.getElementById('surname').value.trim()||'王';
+  const gender=document.getElementById('gender').value;
+  const count=+document.getElementById('count').value;
+  const style=activeStyle;
+
+  const pool=CHARS[style]?.[gender]||CHARS.classical.male;
+  const secondPool=SECOND[gender]||SECOND.male;
+  const poems=POEMS[style]||POEMS.classical;
+
+  const shuffled=shuffle(pool);
+  const results=document.getElementById('results');
+
+  results.innerHTML='<div class="loading"><div class="dot-pulse"><span></span><span></span><span></span></div><p style="margin-top:8px;font-size:.82rem;">Generating names...</p></div>';
+
+  setTimeout(()=>{
+    let html='';
+    for(let i=0;i<Math.min(count,shuffled.length);i++){
+      const c=shuffled[i];
+      const useTwoChar=Math.random()>.5;
+      let fullName,pinyin,englishParts;
+
+      if(useTwoChar&&secondPool.length){
+        const s2=secondPool[Math.floor(Math.random()*secondPool.length)];
+        fullName=surname+c[0]+s2[0];
+        pinyin=surname+' '+c[1]+s2[1];
+        englishParts=c[2]+' + '+s2[2];
+      }else{
+        fullName=surname+c[0];
+        pinyin=surname+' '+c[1];
+        englishParts=c[2];
+      }
+
+      const poem=poems[Math.floor(Math.random()*poems.length)];
+      const score=c[5]+Math.floor(Math.random()*2);
+      const styleLabel={classical:'Classical 古典',nature:'Nature 自然',virtue:'Virtue 美德',modern:'Modern 现代',poetic:'Poetic 诗意',cosmic:'Cosmic 宇宙'}[style];
+
+      html+=`<div class="name-card">
+        <div class="name-top">
+          <div class="name-char">${fullName}</div>
+          <div class="name-info">
+            <div class="name-pinyin">${pinyin}</div>
+            <div class="name-english">${englishParts}</div>
+            <div class="name-meaning">${c[2]} — ${c[0]} carries meanings of ${c[2].toLowerCase()}.</div>
+            <div class="name-meaning-cn">${c[3]}——${c[0]}字蕴含${c[3].replace(/；/g,'、')}之意。</div>
+          </div>
+        </div>
+        <div class="name-details">
+          <span class="name-tag tag-wuxing">☯ ${WUXING_NAMES[c[4]]}</span>
+          <span class="name-tag tag-style">✦ ${styleLabel}</span>
+          <span class="name-tag tag-score">★ ${Math.min(score,10)}/10</span>
+        </div>
+        <div class="name-poem">"${poem}"</div>
+      </div>`;
+    }
+    results.innerHTML=html;
+  },600);
+}
+</script>
+</body>
+</html>
