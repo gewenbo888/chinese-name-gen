@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chinese Name Generator — 中文取名器</title>
-<meta name="description" content="Generate beautiful, meaningful Chinese names with cultural analysis. Choose style, gender, and surname. Free bilingual tool. 中文取名器——生成优美有意义的中文名字。">
-<meta property="og:title" content="Chinese Name Generator — 中文取名器">
-<meta property="og:description" content="Generate meaningful Chinese names with cultural analysis and five-element harmony.">
+<title>Name Generator — Chinese & English — 中英文取名器</title>
+<meta name="description" content="Generate beautiful Chinese and English names with cultural analysis. Choose style, gender, and origin. Free bilingual tool. 中英文取名器。">
+<meta property="og:title" content="Name Generator — Chinese & English">
+<meta property="og:description" content="Generate meaningful Chinese and English names with cultural analysis.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%23f5efe6'/><text x='32' y='44' text-anchor='middle' font-family='serif' font-size='30' fill='%23c44030'>名</text></svg>">
@@ -134,6 +134,43 @@ h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.6rem
 
 footer{text-align:center;padding:32px 0;border-top:1px solid var(--rule);margin-top:40px;}
 footer p{font-size:.7rem;color:var(--dim);}
+
+/* ═══ TABS ═══ */
+.tab-bar{display:flex;gap:4px;margin-bottom:24px;background:var(--bg2);border-radius:12px;padding:4px;}
+.tab-btn{
+  flex:1;padding:10px;border:none;border-radius:10px;
+  font-family:'Manrope',sans-serif;font-size:.82rem;font-weight:600;
+  background:transparent;color:var(--dim);cursor:pointer;transition:all .15s;
+}
+.tab-btn.active{background:#fff;color:var(--ink);box-shadow:var(--shadow);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ═══ EN NAME CARD ═══ */
+.en-name-card{
+  background:#fff;border:1px solid var(--rule);border-radius:16px;
+  padding:0;box-shadow:var(--shadow);overflow:hidden;
+  transition:box-shadow .2s;
+}
+.en-name-card:hover{box-shadow:var(--shadow-lg);}
+.en-name-top{display:flex;align-items:stretch;}
+.en-name-initial{
+  width:80px;display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-weight:600;font-size:2.4rem;
+  background:var(--bg2);border-right:1px solid var(--rule);
+  flex-shrink:0;color:var(--red);padding:20px 0;
+}
+.en-name-info{padding:16px 20px;flex:1;}
+.en-name-full{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:2px;}
+.en-name-origin{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--dim);margin-bottom:8px;}
+.en-name-meaning{font-size:.85rem;color:var(--ink2);line-height:1.7;}
+.en-name-details{padding:0 20px 16px;display:flex;flex-wrap:wrap;gap:6px;}
+.tag-origin{background:rgba(32,96,192,.06);color:#2060c0;}
+.tag-tone{background:var(--gold-bg);color:var(--gold);}
+.en-name-persona{
+  padding:12px 20px;background:var(--bg);border-top:1px solid var(--rule);
+  font-size:.8rem;color:var(--dim);font-style:italic;
+}
 </style>
 </head>
 <body>
@@ -142,11 +179,17 @@ footer p{font-size:.7rem;color:var(--dim);}
 
 <header>
   <div class="header-char">名</div>
-  <h1>Chinese Name Generator</h1>
-  <div class="sub-cn">中文取名器 — 生成优美有意义的中文名字</div>
-  <div class="sub-desc">Enter a surname, choose a style, and generate beautiful Chinese names with cultural analysis, five-element harmony, and poetic imagery.</div>
+  <h1>Name Generator</h1>
+  <div class="sub-cn">中英文取名器 — Chinese & English Names</div>
+  <div class="sub-desc">Generate beautiful names with cultural analysis. Choose Chinese or English, pick a style, and discover your perfect name.</div>
 </header>
 
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('cn')">&#127464;&#127475; Chinese 中文</button>
+  <button class="tab-btn" onclick="switchTab('en')">&#127468;&#127463; English 英文</button>
+</div>
+
+<div class="tab-panel active" id="tab-cn">
 <div class="gen-form">
   <div class="form-row">
     <div class="form-group">
@@ -190,9 +233,60 @@ footer p{font-size:.7rem;color:var(--dim);}
     <p>Choose your options and click Generate<br><span class="cn" style="font-size:.82rem;">选择选项并点击生成</span></p>
   </div>
 </div>
+</div><!-- end tab-cn -->
+
+<!-- ═══ ENGLISH TAB ═══ -->
+<div class="tab-panel" id="tab-en">
+<div class="gen-form">
+  <div class="form-row">
+    <div class="form-group">
+      <label>Gender</label>
+      <select id="enGender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="neutral">Neutral</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Starting Letter (optional)</label>
+      <select id="enLetter">
+        <option value="">Any</option>
+        <option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option><option>P</option><option>Q</option><option>R</option><option>S</option><option>T</option><option>U</option><option>V</option><option>W</option><option>X</option><option>Y</option><option>Z</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Count</label>
+      <select id="enCount">
+        <option value="5">5 names</option>
+        <option value="8" selected>8 names</option>
+        <option value="12">12 names</option>
+      </select>
+    </div>
+  </div>
+
+  <label style="font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);display:block;margin-bottom:8px;">Style</label>
+  <div class="style-chips" id="enStyleChips">
+    <div class="style-chip active" data-style="classic">Classic</div>
+    <div class="style-chip" data-style="modern">Modern</div>
+    <div class="style-chip" data-style="elegant">Elegant</div>
+    <div class="style-chip" data-style="strong">Strong</div>
+    <div class="style-chip" data-style="nature">Nature</div>
+    <div class="style-chip" data-style="rare">Rare & Unique</div>
+  </div>
+
+  <button class="gen-btn" onclick="generateEn()">Generate English Names</button>
+</div>
+
+<div id="enResults">
+  <div class="empty">
+    <div class="icon">&#128209;</div>
+    <p>Choose your options and click Generate</p>
+  </div>
+</div>
+</div><!-- end tab-en -->
 
 <footer>
-  <p>Chinese Name Generator &mdash; 中文取名器 &middot; <a href="https://gewenbo-hub.vercel.app" style="color:var(--dim);">gewenbo.eth</a></p>
+  <p>Name Generator &mdash; 中英文取名器 &middot; <a href="https://gewenbo-hub.vercel.app" style="color:var(--dim);">gewenbo.eth</a></p>
   <p style="margin-top:6px;"><a href="https://github.com/gewenbo888/chinese-name-gen" target="_blank" style="color:var(--dim);font-size:.65rem;text-decoration:none;">View on GitHub &rarr;</a></p>
 </footer>
 
@@ -471,6 +565,250 @@ function generate(){
       </div>`;
     }
     results.innerHTML=html;
+  },600);
+}
+
+// ═══ TAB SWITCHING ═══
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===(tab==='cn'?0:1)));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+// ═══ ENGLISH STYLE CHIPS ═══
+let enActiveStyle='classic';
+document.querySelectorAll('#enStyleChips .style-chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('#enStyleChips .style-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    enActiveStyle=chip.dataset.style;
+  });
+});
+
+// ═══ ENGLISH NAME DATABASE ═══
+// [name, origin, meaning, tone, persona, score]
+const EN_NAMES={
+classic:{
+male:[
+  ['Alexander','Greek','Defender of the people — from alexein (to defend) + aner (man). One of history\'s most enduring names, carried by conquerors and kings.','Strong & Noble','A natural leader with quiet confidence',9],
+  ['Theodore','Greek','Gift of God — from theos (god) + doron (gift). Revived in the modern era with warm, intellectual energy.','Warm & Wise','A thoughtful, kind-hearted scholar',9],
+  ['Sebastian','Latin','Venerable, revered — from sebastos (august). Carries echoes of saints and artists.','Elegant & Refined','A cultured, artistic soul',8],
+  ['Benedict','Latin','Blessed — from benedictus. A name of spiritual depth and quiet strength.','Gentle & Noble','A principled, compassionate person',8],
+  ['Edmund','Old English','Protector of prosperity — from ead (wealth) + mund (protection). Anglo-Saxon royal heritage.','Steady & Strong','A reliable, principled guardian',8],
+  ['Arthur','Celtic','Bear-king — possibly from artos (bear). The legendary king of Camelot.','Mythic & Noble','A born leader with a moral compass',9],
+  ['Julian','Latin','Youthful — from Julianus, the house of Julius Caesar. Timeless and continental.','Refined & Timeless','An intellectual with effortless charm',8],
+  ['Raphael','Hebrew','God has healed — from rapha (heal) + el (God). The archangel and the Renaissance painter.','Artistic & Spiritual','A creative soul with healing energy',9],
+  ['Nathaniel','Hebrew','Gift of God — from natan (give) + el (God). Literary and distinguished.','Literary & Thoughtful','A deep thinker and gifted communicator',8],
+  ['Frederick','Germanic','Peaceful ruler — from frid (peace) + ric (ruler). Regal without being stiff.','Regal & Measured','A diplomatic leader',8],
+  ['Lawrence','Latin','From Laurentum — city of laurels. Associated with victory and honor.','Classic & Warm','A generous, accomplished professional',7],
+  ['Dominic','Latin','Of the Lord — from dominus. Strong and direct, with spiritual undertones.','Bold & Direct','A decisive, principled person',8],
+],
+female:[
+  ['Eleanor','Old French','The other Aenor / bright, shining one. Carried by queens of England and France. Timeless power.','Regal & Warm','A strong, intelligent woman with warmth',9],
+  ['Catherine','Greek','Pure — from katharos. The name of empresses and saints across centuries.','Noble & Pure','A poised, intelligent leader',9],
+  ['Beatrice','Latin','She who brings happiness — from beatus (blessed). Dante\'s muse and eternal symbol of grace.','Joyful & Elegant','A radiant, optimistic presence',9],
+  ['Genevieve','Germanic','Woman of the people — from kuni (kin) + wefa (woman). The patron saint of Paris.','Gentle & Strong','A quietly powerful protector',8],
+  ['Rosalind','Germanic','Gentle horse / beautiful rose — from hros (horse) + lind (soft). Shakespeare\'s wittiest heroine.','Witty & Beautiful','An intelligent, playful spirit',8],
+  ['Josephine','Hebrew/French','God shall add — feminine of Joseph. Carried by an empress. Elegant without pretension.','Elegant & Resilient','A graceful survivor and leader',8],
+  ['Margaret','Greek','Pearl — from margarites. The name of queens, saints, and revolutionaries.','Steadfast & Classic','A reliable, intelligent woman of conviction',8],
+  ['Helena','Greek','Bright, shining — from helene. The face that launched a thousand ships.','Luminous & Mythic','A strikingly beautiful, captivating person',9],
+  ['Cordelia','Celtic/Latin','Heart / daughter of the sea. Shakespeare\'s most loyal daughter in King Lear.','Loyal & Pure','A devoted, principled person',8],
+  ['Vivienne','Latin','Alive — from vivus. The Lady of the Lake in Arthurian legend. Full of life force.','Vibrant & Enchanting','An magnetic, charismatic personality',9],
+  ['Adelaide','Germanic','Noble natured — from adal (noble) + heid (kind). A city and a queen.','Noble & Kind','A generous aristocratic spirit',8],
+  ['Isadora','Greek','Gift of Isis — from the Egyptian goddess. Artistic and free-spirited.','Artistic & Free','A passionate dancer and creator',8],
+]},
+modern:{
+male:[
+  ['Arlo','Old English','Fortified hill. Surged in popularity — indie, creative, adventurous energy.','Cool & Creative','An indie musician or visual artist',8],
+  ['Kai','Hawaiian/Japanese','Sea / forgiveness. Global, short, universally appealing.','Fresh & Global','A free-spirited adventurer',8],
+  ['Ezra','Hebrew','Helper. Short, punchy, literary — Ezra Pound, Ezra Miller.','Sharp & Literary','A creative intellectual',9],
+  ['Felix','Latin','Happy, fortunate. Bright, optimistic energy. Works in any language.','Bright & Lucky','An optimistic, successful person',8],
+  ['Milo','Germanic','Gracious, soldier. Warm, approachable, slightly vintage.','Warm & Approachable','A friendly, reliable companion',8],
+  ['Oscar','Irish/Norse','Deer friend / divine spear. Artistic — Oscar Wilde, Academy Awards.','Artistic & Bold','A bold creative with sharp wit',8],
+  ['Leo','Latin','Lion. Minimal, powerful, universally understood.','Bold & Minimal','A confident, charismatic leader',9],
+  ['Jasper','Persian','Treasurer / bringer of treasure. Warm, gemstone-inspired.','Warm & Precious','A cultured, generous soul',8],
+  ['Hugo','Germanic','Mind, intellect. Continental, sophisticated, short.','Intellectual & European','A cosmopolitan thinker',8],
+  ['Silas','Latin/Greek','Wood, forest. Literary and grounded — George Eliot\'s Silas Marner.','Grounded & Literary','A quiet, thoughtful person',7],
+  ['Atlas','Greek','To carry — the titan who held up the sky. Strong and mythic.','Mythic & Strong','A person who shoulders great responsibility',8],
+  ['Orion','Greek','The hunter — a constellation and a myth. Cosmic and powerful.','Cosmic & Bold','An ambitious, visionary person',9],
+],
+female:[
+  ['Luna','Latin','Moon. Celestial, feminine, universally beautiful.','Celestial & Soft','A dreamy, intuitive person',9],
+  ['Iris','Greek','Rainbow — the messenger goddess. Also a flower. Short and luminous.','Colorful & Graceful','A vibrant, multi-talented person',9],
+  ['Stella','Latin','Star. Direct, luminous, timeless without being old-fashioned.','Luminous & Direct','A person who shines in any room',8],
+  ['Cleo','Greek','Glory — short for Cleopatra. Short, sharp, powerful.','Bold & Regal','A commanding, charismatic woman',8],
+  ['Ivy','English','The climbing plant — symbol of fidelity and eternity.','Classic & Natural','A loyal, elegant person',8],
+  ['Nora','Irish/Arabic','Honor / light. Simple, elegant, cross-cultural appeal.','Simple & Elegant','A wise, composed person',8],
+  ['Aria','Italian/Hebrew','Air, melody / lioness. Musical, airy, modern.','Musical & Airy','A graceful performer',9],
+  ['Freya','Norse','Lady, noble woman — the goddess of love and beauty.','Mythic & Beautiful','A strong, loving, beautiful person',9],
+  ['Sage','English','Wise one / the herb. Gender-neutral energy, grounded.','Wise & Grounded','A calm, perceptive advisor',7],
+  ['Zara','Arabic','Radiance, blooming flower. Global, fashionable, strong.','Radiant & Modern','A stylish, confident person',8],
+  ['Elara','Greek','One of Jupiter\'s moons. Rare, celestial, enchanting.','Celestial & Rare','A mysterious, captivating person',9],
+  ['Thea','Greek','Goddess — from thea. Short for Theodora. Warm and divine.','Divine & Warm','A nurturing, powerful presence',8],
+]},
+elegant:{
+male:[
+  ['Evander','Greek','Good man — from eu (good) + aner (man). Classical and distinguished.','Distinguished & Noble','A gentleman of old-world grace',9],
+  ['Cassius','Latin','Hollow — but carried by Cassius Clay/Muhammad Ali. Powerful despite etymology.','Powerful & Regal','A fierce competitor with elegance',8],
+  ['Lucien','French/Latin','Light — from lux. The French form adds continental sophistication.','Luminous & Refined','A cultured, European intellectual',9],
+  ['Atticus','Latin','From Attica (Athens). Literary — Atticus Finch. Moral and intellectual.','Moral & Literary','A principled, eloquent advocate',9],
+  ['Stellan','Swedish','Calm, peaceful. Rare and Nordic. Stellan Skarsgård.','Calm & Nordic','A quiet, powerful Scandinavian spirit',8],
+  ['Leander','Greek','Lion-man — from leon + aner. The lover who swam the Hellespont.','Romantic & Strong','A passionate, devoted lover',8],
+  ['Ambrose','Greek','Immortal — from ambrotos. Saintly and literary.','Timeless & Spiritual','An ethereal, intellectual person',8],
+  ['Dorian','Greek','From Doris / gift. Oscar Wilde\'s eternally young Dorian Gray.','Mysterious & Beautiful','An aesthete obsessed with beauty',8],
+  ['Percival','French','Pierce the veil — a Grail knight. Noble quest energy.','Questing & Pure','A seeker of truth and meaning',8],
+  ['Alaric','Germanic','Ruler of all — from ala (all) + ric (ruler). Visigoth king name.','Commanding & Ancient','A decisive, powerful ruler',8],
+  ['Caspian','Geographical','From the Caspian Sea. Narnia\'s Prince Caspian. Adventurous and regal.','Adventurous & Regal','A daring explorer with royal bearing',9],
+  ['Lysander','Greek','Liberator — from lysis (release) + aner (man). Shakespeare and Sparta.','Liberating & Strong','A freedom-fighter with grace',8],
+],
+female:[
+  ['Seraphina','Hebrew','Fiery, burning — from seraphim. Angelic and dramatic.','Angelic & Dramatic','A radiant, passionate artist',9],
+  ['Evangeline','Greek','Bearer of good news — from eu (good) + angelos (messenger). Longfellow\'s heroine.','Poetic & Hopeful','A beacon of hope and grace',9],
+  ['Cassandra','Greek','She who entangles men — the Trojan prophetess. Tragic beauty.','Prophetic & Tragic','A visionary no one believes — until they do',8],
+  ['Celestine','Latin','Heavenly — from caelestis. Five popes bore this name.','Heavenly & Serene','A person of transcendent calm',8],
+  ['Isolde','Celtic','Ice ruler / fair lady. The great love of Tristan. Romantic and mythic.','Romantic & Mythic','A passionate, devoted lover',9],
+  ['Lavinia','Latin','From Lavinium — Aeneas\'s wife who founded Rome\'s lineage. Classical power.','Classical & Founding','A woman who builds legacies',8],
+  ['Ophelia','Greek','Help, succor. Shakespeare\'s tragic maiden. Hauntingly beautiful.','Haunting & Beautiful','A sensitive, artistic soul',8],
+  ['Valentina','Latin','Strong, healthy — from valens. The first woman in space. Power + femininity.','Strong & Feminine','A pioneering, courageous woman',9],
+  ['Arabella','Latin','Yielding to prayer / beautiful. Scottish literary heritage.','Beautiful & Literary','A refined, cultured person',8],
+  ['Octavia','Latin','Eighth — but associated with Roman nobility and power. Strong and rare.','Noble & Powerful','An commanding, dignified woman',8],
+  ['Guinevere','Welsh','White phantom / fair one. Arthur\'s queen. Legendary beauty.','Legendary & Fair','A captivating, complex personality',8],
+  ['Rosalina','Italian','Beautiful rose — rosa + bella. Musical and romantic.','Musical & Romantic','A performer with effortless beauty',8],
+]},
+strong:{
+male:[
+  ['Magnus','Latin','Great. Carried by kings of Scandinavia. Unambiguous power.','Powerful & Direct','A person of great capability',9],
+  ['Maximus','Latin','Greatest. Gladiator energy. Peak masculine strength.','Maximum & Bold','A warrior and competitor',9],
+  ['Conrad','Germanic','Bold counsel — from kuoni (brave) + rad (counsel). Strong and wise.','Brave & Wise','A courageous advisor',8],
+  ['Garrison','English','Fortified place. Military strength, protective energy.','Protective & Solid','A reliable protector',7],
+  ['Victor','Latin','Conqueror. Direct, universal, powerful.','Victorious & Direct','A winner in every arena',8],
+  ['Griffin','Welsh','Strong lord — from gruffudd. Also the mythical beast. Fierce and noble.','Fierce & Noble','A fierce protector with noble heart',8],
+  ['Axel','Scandinavian','Father of peace — from Absalom. Despite meaning, sounds intensely strong.','Intense & Nordic','An action-oriented person',8],
+  ['Titus','Latin','Title of honour. Roman emperor name. Direct and forceful.','Forceful & Roman','A decisive, no-nonsense leader',8],
+  ['Roland','Germanic','Famous land — from hrod (fame) + land. The paladin of Charlemagne.','Heroic & Legendary','A loyal warrior who never retreats',9],
+  ['Thorin','Norse','Bold, daring — from Thor. Tolkien\'s dwarf king.','Daring & Mythic','A stubborn, courageous king',8],
+  ['Leonidas','Greek','Son of the lion. The Spartan king at Thermopylae. Ultimate warrior name.','Spartan & Fearless','A leader who fights to the last',9],
+  ['Ajax','Greek','The great warrior of the Trojan War. Raw, powerful, ancient.','Raw & Ancient','A mighty, uncompromising fighter',8],
+],
+female:[
+  ['Athena','Greek','Goddess of wisdom and warfare. The complete package — brain and strength.','Wise & Warrior','A strategic genius and fierce fighter',9],
+  ['Valeria','Latin','Strong, healthy — from valere. Roman gens name. Powerful femininity.','Strong & Roman','A powerful woman of conviction',8],
+  ['Brynhild','Norse','Armored battle — the Valkyrie. Warrior queen of Norse myth.','Warrior & Noble','A fearless shield-maiden',9],
+  ['Diana','Latin','Divine, goddess of the hunt. Athletic, independent, powerful.','Athletic & Divine','An independent, outdoorsy leader',8],
+  ['Artemis','Greek','The huntress goddess. Twin of Apollo. Wild and untameable.','Wild & Powerful','A fiercely independent person',9],
+  ['Morgana','Celtic','Sea-born / great queen. Le Fay — the powerful enchantress of Arthurian legend.','Enchanting & Powerful','A mysterious, brilliant strategist',8],
+  ['Sable','English','Black — a name of dark elegance and strength.','Dark & Elegant','A person of mysterious power',7],
+  ['Xena','Greek','Hospitable — but forever the Warrior Princess. Iconic strength.','Warrior & Iconic','A fierce, unstoppable warrior',8],
+  ['Rowena','Germanic/Celtic','Fame and joy — from hrod (fame) + wynn (joy). Saxon princess.','Noble & Joyful','A leader who inspires loyalty',8],
+  ['Electra','Greek','Shining, bright — amber. The daughter of Agamemnon. Intense and driven.','Intense & Bright','A person driven by justice',8],
+  ['Sigrid','Norse','Victory + beautiful. A Valkyrie name. Strength meets beauty.','Victorious & Beautiful','A triumphant, magnetic personality',8],
+  ['Ingrid','Norse','Beautiful, beloved — from Ing (a god) + frid (beautiful). Bergman\'s name.','Beautiful & Iconic','A timeless, captivating woman',9],
+]},
+nature:{
+male:[
+  ['Rowan','Gaelic','Little red-haired one / rowan tree. Earthy, Celtic, warm.','Earthy & Celtic','A grounded, nature-loving person',8],
+  ['River','English','Flowing water. Gender-neutral, free, natural.','Free & Flowing','A free-spirited wanderer',8],
+  ['Forrest','English','Woodland. Forrest Gump made it gentle. Grounded and honest.','Grounded & Gentle','An honest, simple-hearted person',7],
+  ['Linden','English','Lime tree. Soft, sheltering, poetic.','Soft & Sheltering','A gentle, nurturing presence',7],
+  ['Jasper','Persian','Treasure — also a semi-precious stone. Warm, earthy.','Warm & Earthy','A generous, grounded person',8],
+  ['Heath','English','Moorland. Stark, beautiful, windswept.','Wild & Stark','A rugged, independent spirit',7],
+  ['Cedar','English','The evergreen tree. Strong, aromatic, enduring.','Strong & Enduring','A steady, reliable presence',7],
+  ['Flint','English','The hard stone that makes fire. Sharp and primal.','Sharp & Primal','A tough, resourceful person',7],
+  ['Sterling','English','Genuine, excellent — like sterling silver. Pure quality.','Pure & Excellent','A person of impeccable standards',8],
+  ['Reed','English','The tall grass. Flexible, musical (reed instruments), elegant.','Flexible & Musical','An adaptable, creative person',7],
+  ['Cliff','English','Steep rock face. Direct, strong, no-nonsense.','Direct & Strong','A straightforward, solid person',7],
+  ['Birch','English','The white-barked tree. Clean, Nordic, poetic.','Clean & Nordic','A pure, minimalist spirit',7],
+],
+female:[
+  ['Aurora','Latin','Dawn — the Roman goddess. Also the Northern Lights. Luminous.','Luminous & Magical','A person who lights up every room',9],
+  ['Willow','English','The graceful tree. Flexible, beautiful, resilient.','Graceful & Resilient','A flexible, emotionally intelligent person',8],
+  ['Coral','English','The sea organism. Warm, oceanic, precious.','Oceanic & Warm','A warm, colorful personality',7],
+  ['Dahlia','Swedish','The flower — named after botanist Dahl. Exotic and bold.','Exotic & Bold','A striking, unforgettable person',8],
+  ['Hazel','English','The tree / light brown. Warm, vintage, nature-inspired.','Warm & Vintage','A wise, down-to-earth person',8],
+  ['Ivy','English','The evergreen climber. Loyalty and determination.','Loyal & Determined','A tenacious, faithful companion',8],
+  ['Juniper','Latin','The evergreen shrub. Fresh, aromatic, adventurous.','Fresh & Adventurous','An outdoorsy, free-spirited person',8],
+  ['Meadow','English','Open grassland. Peaceful, wide, sunlit.','Peaceful & Open','A calm, welcoming personality',7],
+  ['Briar','English','Thorny shrub. Beautiful but with edges — like Sleeping Beauty.','Beautiful & Edgy','A charming person with hidden strength',8],
+  ['Fern','English','The ancient plant. Delicate, shade-loving, mysterious.','Delicate & Mysterious','A quiet, introspective person',7],
+  ['Clover','English','The lucky plant. Cheerful, Irish, fortunate.','Lucky & Cheerful','An optimistic, lucky person',7],
+  ['Wren','English','The small, powerful bird. Tiny but mighty. Musical.','Tiny & Mighty','A small person with enormous talent',8],
+]},
+rare:{
+male:[
+  ['Leif','Norse','Descendant, heir. The Viking explorer. Adventurous and historic.','Adventurous & Norse','A bold explorer of new frontiers',8],
+  ['Soren','Danish','Stern, severe — from Severus. Kierkegaard\'s name. Philosophical and Nordic.','Philosophical & Nordic','A deep thinker with existential depth',9],
+  ['Idris','Welsh/Arabic','Ardent lord / interpreter. Idris Elba made it global.','Charismatic & Global','A magnetic, versatile talent',8],
+  ['Caius','Latin','Rejoice — ancient Roman praenomen. Rare and distinguished.','Ancient & Distinguished','A scholar with Roman gravitas',8],
+  ['Thane','Scottish','Feudal lord. Macbeth was Thane of Glamis. Powerful and literary.','Powerful & Literary','An ambitious leader with dark charisma',8],
+  ['Oleander','Greek','The flowering shrub. Beautiful but poisonous. Complex and striking.','Beautiful & Dangerous','A captivating person with hidden depths',8],
+  ['Cormac','Irish','Charioteer / son of defilement. Cormac McCarthy. Raw literary power.','Raw & Literary','A storyteller of brutal honesty',8],
+  ['Zephyr','Greek','West wind — gentle and warm. Airy, poetic, unique.','Airy & Poetic','A gentle, creative free spirit',8],
+  ['Peregrine','Latin','Traveler, pilgrim — from peregrinus. The fastest bird. Rare and swift.','Swift & Wandering','A restless traveler and seeker',9],
+  ['Oberon','Germanic/French','Noble bear — king of the fairies in Shakespeare. Mythic and regal.','Mythic & Regal','A magical, commanding presence',9],
+  ['Balthazar','Babylonian','Protect the king. One of the Three Magi. Exotic and ancient.','Exotic & Ancient','A wise, mysterious sage',8],
+  ['Quillan','Irish','Cub. Extremely rare, soft yet strong. Fresh.','Soft & Fresh','A young, promising talent',7],
+],
+female:[
+  ['Elowen','Cornish','Elm tree. Celtic nature name. Extremely rare and beautiful.','Celtic & Beautiful','A mysterious, nature-connected soul',9],
+  ['Calista','Greek','Most beautiful — superlative of kalos. Rare and luminous.','Most Beautiful','A stunningly beautiful person',9],
+  ['Thessaly','Greek','A region of ancient Greece. Geographic, poetic, unique.','Geographic & Poetic','A person of classical beauty and mystery',8],
+  ['Ondine','Latin','Little wave — from unda. A water nymph. Ethereal and fluid.','Ethereal & Fluid','A graceful, water-like personality',8],
+  ['Zinnia','Latin','The vibrant flower. Named after botanist Zinn. Colorful and bold.','Colorful & Bold','A vibrant, joyful personality',7],
+  ['Astrid','Norse','Divinely beautiful — from ass (god) + frid (beautiful). Scandinavian royalty.','Divine & Nordic','A beautiful, strong Scandinavian woman',9],
+  ['Ianthe','Greek','Violet flower — from ion (violet) + anthos (flower). Mythological ocean nymph.','Mythic & Floral','An ocean-spirited, graceful person',8],
+  ['Vesper','Latin','Evening star. James Bond connection. Mysterious elegance.','Mysterious & Evening','An enigmatic, alluring personality',9],
+  ['Liora','Hebrew','My light. Warm, luminous, rare outside Israel.','Luminous & Rare','A person who radiates inner light',8],
+  ['Solene','French','Solemn, dignified. French elegance with depth.','Dignified & French','A composed, elegant woman',8],
+  ['Niamh','Irish','Bright, radiant — pronounced "Neev". Irish mythology\'s beauty.','Radiant & Mythic','A luminous, otherworldly presence',9],
+  ['Ottilie','Germanic','Prosperous in battle. Rare, vintage, charming.','Vintage & Charming','A delightfully old-fashioned person',8],
+]}
+};
+// Neutral mixes
+Object.keys(EN_NAMES).forEach(style=>{
+  EN_NAMES[style].neutral=[...EN_NAMES[style].male.slice(0,6),...EN_NAMES[style].female.slice(0,6)];
+});
+
+function generateEn(){
+  const gender=document.getElementById('enGender').value;
+  const letter=document.getElementById('enLetter').value;
+  const count=+document.getElementById('enCount').value;
+  const style=enActiveStyle;
+
+  const pool=EN_NAMES[style]?.[gender]||EN_NAMES.classic.male;
+  let filtered=letter?pool.filter(n=>n[0][0]===letter):pool;
+  if(!filtered.length)filtered=pool;
+
+  const shuffled=shuffle(filtered);
+  const container=document.getElementById('enResults');
+
+  container.innerHTML='<div class="loading"><div class="dot-pulse"><span></span><span></span><span></span></div><p style="margin-top:8px;font-size:.82rem;">Generating names...</p></div>';
+
+  setTimeout(()=>{
+    let html='';
+    for(let i=0;i<Math.min(count,shuffled.length);i++){
+      const n=shuffled[i];
+      const [name,origin,meaning,tone,persona,score]=n;
+      const styleLabel={classic:'Classic',modern:'Modern',elegant:'Elegant',strong:'Strong',nature:'Nature',rare:'Rare & Unique'}[style];
+
+      html+=`<div class="en-name-card">
+        <div class="en-name-top">
+          <div class="en-name-initial">${name[0]}</div>
+          <div class="en-name-info">
+            <div class="en-name-full">${name}</div>
+            <div class="en-name-origin">${origin} origin</div>
+            <div class="en-name-meaning">${meaning}</div>
+          </div>
+        </div>
+        <div class="en-name-details">
+          <span class="name-tag tag-origin">&#127760; ${origin}</span>
+          <span class="name-tag tag-tone">&#10024; ${tone}</span>
+          <span class="name-tag tag-style">&#9733; ${styleLabel}</span>
+          <span class="name-tag tag-score">&#9733; ${Math.min(score,10)}/10</span>
+        </div>
+        <div class="en-name-persona">"${persona}"</div>
+      </div>`;
+    }
+    container.innerHTML='<div class="results">'+html+'</div>';
   },600);
 }
 </script>
